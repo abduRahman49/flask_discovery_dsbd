@@ -11,12 +11,12 @@ app = Flask(__name__)
 @app.route("/home")
 def hello_world():
     # réponse HTTP à l'utilisateur
-    return "Hello, World!"
+    return "Bienvenue"
 
-@app.route("/about")
-def about():
+@app.route("/about/<name>")
+def about(name):
     # réponse HTTP à l'utilisateur
-    return "<p>Hello, about!</p>"
+    return render_template("about.html", name=name)
 
 @app.route("/contact")
 def contact():
@@ -25,3 +25,22 @@ def contact():
     etudiant = {"nom": "Fall", "prenom": "Samba", "age": 21}
     liste_cours = ["Python", "Flask", "UML"]
     return render_template("contact.html", name=nom, student=etudiant, cours=liste_cours)
+
+@app.route("/filtrage")
+def filtrage():
+    posts = [
+        {"title": "Flask Intro", "views": 1243.567},
+        {"title": "Jinja Deep Dive", "views": 987.3},
+        {"title": "", "views": 0}
+    ]
+    titres = [post["title"] for post in posts]
+    return render_template("filtre.html", publications=posts, titres=titres)
+
+@app.route("/iteration")
+def iteration():
+    posts = [
+        {"title": "Flask Intro", "views": 1243.567},
+        {"title": "Jinja Deep Dive", "views": 987.3},
+        {"title": "", "views": 0}
+    ]
+    return render_template("boucle.html", posts=posts)

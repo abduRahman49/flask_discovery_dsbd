@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    {% for publication in publications %}
+        
+        {{ publication.title | default("Pas de titre disponible", true) }} - {{ publication.views | round(1) }}<br>
+    {% endfor %}
+
+   {# {{ titres | join("|") }} #}
+
+   {{ publications | map(attribute="title") | join("|") }}
+</body>
+</html>

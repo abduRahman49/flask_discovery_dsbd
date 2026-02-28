@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact page</title>
+</head>
+<body>
+    
+    <p>Bonjour {{ name }}, </p>
+
+    Vous êtes sur notre site.
+
+    Nous vous souhaitons une bonne navigation
+
+    L'étudiant enregistré
+    Nom: {{ student.nom }} {{ student.prenom }}
+
+    {% if student.age > 18 %}
+        <p>L'étudiant est majeur</p>
+    {% else %}
+        <p>L'étudiant n'est pas majeur</p>
+    {% endif %}
+
+    L'étudiant est enrollé sur les cours suivants:
+
+    {% for cour in cours %}
+        {{ cour }}
+    {% endfor %}
+</body>
+</html>

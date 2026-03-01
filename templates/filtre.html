@@ -8,11 +8,12 @@
 <body>
     
     {% for publication in publications %}
-        
         {{ publication.title | default("Pas de titre disponible", true) }} - {{ publication.views | round(1) }}<br>
     {% endfor %}
 
    {# {{ titres | join("|") }} #}
+
+   {# {{ publications | join("|", attribute="title") }} #}
 
    {{ publications | map(attribute="title") | join("|") }}
 </body>

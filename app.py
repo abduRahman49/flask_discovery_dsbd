@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route("/home")
 def hello_world():
     # réponse HTTP à l'utilisateur
-    return "Bienvenue"
+    return render_template("index.html")
 
 @app.route("/about/<name>")
 def about(name):

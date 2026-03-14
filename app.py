@@ -1,8 +1,19 @@
 # import de la bibliotheque Flask et des fonctions utilitaires
+import json
 from flask import Flask, render_template
+from extensions.sqlalchemy import db
+from .models import User
 
 # définition de l'instance de l'application
 app = Flask(__name__)
+# configuration de l'application à partir du fichier config.json
+app.config.from_file("config.json", load=json.load)
+
+# initialisation de l'extension SQLAlchemy
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 # liaison entre une route (url) de l' application et un controleur (fonction)
 # lien entre url et fonction

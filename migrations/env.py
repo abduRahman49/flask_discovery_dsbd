@@ -41,7 +41,7 @@ def get_engine_url():
 target_metadata = db.metadata
 
 
-config.set_main_option('sqlalchemy.url', db.engine.name)
+config.set_main_option('sqlalchemy.url', get_engine_url())
 target_db = current_app.extensions['migrate'].db
 
 # other values from the config, defined by the needs of env.py,

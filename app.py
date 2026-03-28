@@ -2,7 +2,8 @@
 import json
 from flask import Flask, render_template
 from extensions.sqlalchemy import db
-from .models import User
+from extensions.migrations import migrate
+from models import User
 
 # définition de l'instance de l'application
 app = Flask(__name__)
@@ -11,6 +12,8 @@ app.config.from_file("config.json", load=json.load)
 
 # initialisation de l'extension SQLAlchemy
 db.init_app(app)
+# initialisation de l'extension Flask-Migrate
+migrate.init_app(app)
 
 with app.app_context():
     db.create_all()

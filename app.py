@@ -13,10 +13,7 @@ app.config.from_file("config.json", load=json.load)
 # initialisation de l'extension SQLAlchemy
 db.init_app(app)
 # initialisation de l'extension Flask-Migrate
-migrate.init_app(app)
-
-with app.app_context():
-    db.create_all()
+migrate.init_app(app, db)
 
 # liaison entre une route (url) de l' application et un controleur (fonction)
 # lien entre url et fonction

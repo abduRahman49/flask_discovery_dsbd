@@ -1,7 +1,7 @@
 import enum
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, Boolean, DateTime, Enum, Table, Column
-from datetime import datetime, timezone
+from sqlalchemy import String, Boolean, DateTime, Enum, Table, Column, Date
+from datetime import datetime, timezone, date
 from extensions.sqlalchemy import db
 
 
@@ -10,6 +10,11 @@ from extensions.sqlalchemy import db
 class SessionType(enum.Enum):
     NORMALE = "NORMALE"
     RATTRAPAGE = "RATTRAPAGE"
+
+
+class SexeType(enum.Enum):
+    M = "M"
+    F = "F"
 
 
 session_homework = Table(
@@ -24,9 +29,23 @@ class User(db.Model):
     __tablename__ = 'user'
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(String(80), unique=True)
-    email: Mapped[str] = mapped_column(String(120))
+    password: Mapped[str] = mapped_column(String(150))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    profile: Mapped["Profile"] = db.relationship(back_populates="user", uselist=False)
+
+
+class Profile(db.Model):
+    __tablename__ = 'profile'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email : Mapped[str] = mapped_column(String(150), unique=True)
+    nom: Mapped[str] = mapped_column(String(150))
+    prenom: Mapped[str] = mapped_column(String(150))
+    date_of_birth: Mapped[date] = mapped_column(Date)
+    telephone: Mapped[str] = mapped_column(String(20))
+    sexe: Mapped[SexeType] = mapped_column(Enum(SexeType))
+    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), unique=True)
+    user: Mapped["User"] = db.relationship(back_populates="profile")
 
 
 class Homework(db.Model):

@@ -1,0 +1,526 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Encodage & Langue ────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ── Mise en page ─────────────────────────────────────────────────────────────
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+
+% ── Code source ──────────────────────────────────────────────────────────────
+\usepackage{listings}
+\usepackage{inconsolata}
+
+\definecolor{codebg}{RGB}{245,245,250}
+\definecolor{codeframe}{RGB}{180,180,210}
+\definecolor{keyword}{RGB}{0,0,180}
+\definecolor{string}{RGB}{163,21,21}
+\definecolor{comment}{RGB}{0,128,0}
+\definecolor{builtin}{RGB}{0,100,150}
+
+\lstdefinestyle{python}{
+    language=Python,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keyword}\bfseries,
+    stringstyle=\color{string},
+    commentstyle=\color{comment}\itshape,
+    emph={Mapped, mapped_column, db, select, session, scalars, scalar,
+          all, first, one, one_or_none, execute, where, filter, order_by,
+          join, outerjoin, func, and_, or_, not_, desc, asc, ilike, like,
+          Session, User, Profile, Homework, SessionType},
+    emphstyle=\color{builtin}\bfseries,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=6pt,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+}
+\lstdefinestyle{html}{
+    language=HTML,
+    backgroundcolor=\color{codebg},
+    frame=single,
+    rulecolor=\color{codeframe},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keyword}\bfseries,
+    stringstyle=\color{string},
+    commentstyle=\color{comment}\itshape,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+}
+\lstset{style=python}
+
+% ── Couleurs thématiques ─────────────────────────────────────────────────────
+\definecolor{primary}{RGB}{30,90,160}
+\definecolor{accent}{RGB}{220,80,30}
+\definecolor{success}{RGB}{30,130,70}
+\definecolor{warn}{RGB}{200,140,0}
+
+% ── Boîtes ───────────────────────────────────────────────────────────────────
+\mdfdefinestyle{objectif}{
+    linecolor=primary, linewidth=1.5pt,
+    backgroundcolor=primary!6,
+    leftmargin=0pt, rightmargin=0pt,
+    innerleftmargin=10pt, innerrightmargin=10pt,
+    innertopmargin=8pt, innerbottommargin=8pt,
+}
+\mdfdefinestyle{exercice}{
+    linecolor=accent, linewidth=1.2pt,
+    backgroundcolor=accent!5,
+    leftmargin=0pt, rightmargin=0pt,
+    innerleftmargin=10pt, innerrightmargin=10pt,
+    innertopmargin=8pt, innerbottommargin=8pt,
+}
+\mdfdefinestyle{rappel}{
+    linecolor=success, linewidth=1pt,
+    backgroundcolor=success!5,
+    leftmargin=0pt, rightmargin=0pt,
+    innerleftmargin=10pt, innerrightmargin=10pt,
+    innertopmargin=8pt, innerbottommargin=8pt,
+}
+\mdfdefinestyle{attention}{
+    linecolor=warn, linewidth=1pt,
+    backgroundcolor=warn!8,
+    leftmargin=0pt, rightmargin=0pt,
+    innerleftmargin=10pt, innerrightmargin=10pt,
+    innertopmargin=8pt, innerbottommargin=8pt,
+}
+
+% ── En-tête / Pied de page ───────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\textcolor{primary}{\textbf{TP Flask / SQLAlchemy\,2}}}
+\rhead{\small\textcolor{gray}{DSBD -- 2025-2026}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Titres ───────────────────────────────────────────────────────────────────
+\titleformat{\section}[block]
+    {\large\bfseries\color{primary}}
+    {\thesection.}{0.6em}{}[\vspace{1pt}\hrule\vspace{4pt}]
+
+\titleformat{\subsection}[block]
+    {\normalsize\bfseries\color{accent}}
+    {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}[runin]
+    {\normalsize\bfseries\color{success}}
+    {\thesubsubsection.}{0.4em}{}[~~]
+
+% ── Commandes utilitaires ────────────────────────────────────────────────────
+\newcommand{\pts}[1]{\hfill\textcolor{accent}{\textbf{[#1 pts]}}}
+\newcommand{\fichier}[1]{\texttt{\textcolor{primary}{#1}}}
+\newcommand{\kw}[1]{\texttt{\textbf{#1}}}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+% ── Page de titre ────────────────────────────────────────────────────────────
+\begin{center}
+    {\LARGE\bfseries\color{primary} Travaux Pratiques}\\[6pt]
+    {\large Requêtes SQLAlchemy\,2 et intégration Flask}\\[4pt]
+    {\large\bfseries Module~: Développement Web avec Flask}\\[2pt]
+    {\normalsize Formation DSBD\quad|\quad Année 2025-2026}\\[12pt]
+    \hrule height 1.5pt
+    \vspace{4pt}
+    \hrule height 0.4pt
+\end{center}
+
+\vspace{6pt}
+
+\begin{mdframed}[style=objectif]
+\textbf{\textcolor{primary}{Objectifs pédagogiques}}
+\begin{itemize}[noitemsep]
+    \item Maîtriser la syntaxe \textbf{moderne de SQLAlchemy\,2} (\kw{select}, \kw{Mapped}, \kw{mapped\_column}).
+    \item Effectuer des requêtes de lecture, filtrage, tri, jointure et agrégation.
+    \item Insérer, modifier et supprimer des données via la session SQLAlchemy.
+    \item Exposer les données via des \textbf{routes Flask} et les afficher dans des \textbf{templates Jinja2}.
+    \item Comprendre les relations entre modèles (1-1, 1-N, N-N) et les interroger.
+\end{itemize}
+\end{mdframed}
+
+\vspace{4pt}
+
+\begin{mdframed}[style=attention]
+\textbf{Durée estimée~:} 3h30\quad
+\textbf{Support~:} documents autorisés\quad
+\textbf{Base de données~:} SQLite (\fichier{instance/project.db})\\
+Toutes les réponses doivent utiliser la syntaxe \textbf{SQLAlchemy\,2} (\kw{db.session.execute(select(...))}).
+L'ancienne syntaxe \kw{Model.query} est \textcolor{accent}{\textbf{interdite}}.
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Contexte du projet}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Le projet Flask sur lequel vous travaillez modélise une plateforme pédagogique simple.
+Voici un rappel du schéma de données implémenté dans \fichier{models.py} :
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Modèle} & \textbf{Table} & \textbf{Description} \\
+\midrule
+\kw{User}     & \texttt{user}          & Compte utilisateur (login, mot de passe, actif) \\
+\kw{Profile}  & \texttt{profile}       & Informations personnelles liées à un \kw{User} (1-1) \\
+\kw{Homework} & \texttt{homework}      & Devoir avec titre, description, date limite \\
+\kw{Session}  & \texttt{session}       & Session d'examen (type : NORMALE / RATTRAPAGE) \\
+\multicolumn{2}{l}{\texttt{session\_homework}} & Table d'association \kw{Session} $\leftrightarrow$ \kw{Homework} (N-N) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{mdframed}[style=rappel]
+\textbf{Rappel syntaxe SQLAlchemy\,2 :}
+\begin{lstlisting}
+from sqlalchemy import select, func, and_, or_, desc
+from models import User, Profile, Homework, Session
+
+# Lecture de tous les utilisateurs
+stmt = select(User)
+users = db.session.scalars(stmt).all()
+
+# Lecture d'un seul enregistrement
+user = db.session.scalar(select(User).where(User.id == 1))
+\end{lstlisting}
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Partie I\,– Préparation et peuplement de la base}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Exercice 1\,– Création de la base et migration}
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Vérifiez que l'environnement virtuel est activé et que les dépendances listées dans \fichier{requirements.txt} sont bien installées.
+    \item Initialisez les migrations si ce n'est pas encore fait, puis appliquez-les~:
+\begin{lstlisting}[numbers=none]
+flask db init     # une seule fois
+flask db migrate -m "init"
+flask db upgrade
+\end{lstlisting}
+    \item Confirmez la création des tables en ouvrant \fichier{instance/project.db} avec un outil SQLite (ex.~: \textit{DB Browser for SQLite} ou l'extension VS\,Code \textit{SQLite Viewer}).
+    \item \textbf{Question~:} expliquez en deux phrases la différence entre \kw{flask db migrate} et \kw{flask db upgrade}.
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Exercice 2\,– Peuplement via un script}
+
+Créez un fichier \fichier{seed.py} à la racine du projet. Ce script doit~:
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Importer \kw{app} et \kw{db} depuis \fichier{app.py} et \fichier{extensions/sqlalchemy.py}.
+    \item Dans un contexte applicatif (\kw{with app.app\_context()}), insérer les données suivantes en utilisant \textbf{uniquement} la session SQLAlchemy (\kw{db.session.add}, \kw{db.session.commit})~:
+
+    \begin{itemize}
+        \item \textbf{5 utilisateurs} (au moins 2 inactifs, i.e.\ \kw{is\_active=False}).
+        \item \textbf{5 profils} associés, dont au moins 2 de sexe F et 3 de sexe M, avec des dates de naissance variées (entre 1990 et 2002).
+        \item \textbf{4 devoirs} (\kw{Homework}) avec des dates limites différentes (dont 1 déjà dépassée).
+        \item \textbf{2 sessions d'examen}~: une \kw{NORMALE} et une \kw{RATTRAPAGE}, chacune associée à au moins 2 devoirs.
+        \item Associer un correcteur (\kw{corrected\_by}) à au moins 2 devoirs.
+    \end{itemize}
+
+    \item Vérifiez l'insertion en affichant dans le terminal le nombre d'enregistrements dans chaque table.
+\end{enumerate}
+\end{mdframed}
+
+\textbf{Structure attendue de \fichier{seed.py}~:}
+\begin{lstlisting}
+import json
+from app import app
+from extensions.sqlalchemy import db
+from models import User, Profile, Homework, Session, SexeType, SessionType
+from datetime import datetime, timezone, date
+
+with app.app_context():
+    # -- Nettoyage (optionnel, pour re-seeder proprement) ---------------------
+    db.session.execute(db.delete(Session))
+    db.session.execute(db.delete(Homework))
+    db.session.execute(db.delete(Profile))
+    db.session.execute(db.delete(User))
+    db.session.commit()
+
+    # -- Utilisateurs ---------------------------------------------------------
+    u1 = User(username="alice",   password="hash1", is_active=True)
+    u2 = User(username="bob",     password="hash2", is_active=True)
+    u3 = User(username="charlie", password="hash3", is_active=False)
+    u4 = User(username="diana",   password="hash4", is_active=True)
+    u5 = User(username="eve",     password="hash5", is_active=False)
+    db.session.add_all([u1, u2, u3, u4, u5])
+    db.session.flush()   # obtenir les id sans commit
+
+    # -- Profils --------------------------------------------------------------
+    # A COMPLETER ...
+
+    # -- Devoirs --------------------------------------------------------------
+    # A COMPLETER ...
+
+    # -- Sessions -------------------------------------------------------------
+    # A COMPLETER ...
+
+    db.session.commit()
+    print("Base peuplée avec succès.")
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Partie II\,– Requêtes SQLAlchemy\,2 \og standalone\fg{}}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Créez un fichier \fichier{queries.py} à la racine du projet.
+Chaque question doit être résolue dans une fonction dédiée appelée dans un bloc \kw{with app.app\_context()}.
+
+\begin{mdframed}[style=attention]
+\textbf{Rappel des imports utiles~:}
+\begin{lstlisting}[numbers=none]
+from sqlalchemy import select, func, and_, or_, not_, desc, asc
+from datetime import datetime, timezone
+\end{lstlisting}
+\end{mdframed}
+
+\subsection{Requêtes de lecture simple}
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{Q\arabic*.}]
+    \item \textbf{Tous les utilisateurs.} Récupérez et affichez la liste complète des utilisateurs (id, username, is\_active).
+
+    \item \textbf{Utilisateur par username.} Écrivez une fonction \kw{get\_user\_by\_username(username)} qui retourne l'utilisateur correspondant, ou \kw{None} si inexistant. Utilisez \kw{scalar()}.
+
+    \item \textbf{Utilisateurs actifs.} Récupérez uniquement les utilisateurs dont \kw{is\_active} vaut \kw{True}, triés par \kw{username} alphabétiquement (\kw{order\_by}).
+
+    \item \textbf{Comptage.} Affichez le nombre total d'utilisateurs actifs en utilisant \kw{func.count()}.
+
+    \item \textbf{Premier et dernier.} Récupérez l'utilisateur créé en premier et celui créé en dernier (\kw{created\_at}), en utilisant \kw{asc} et \kw{desc}.
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Filtrage avancé}
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{Q\arabic*.},start=6]
+    \item \textbf{Recherche partielle.} Récupérez tous les utilisateurs dont le \kw{username} contient la lettre \og a \fg{} (insensible à la casse) en utilisant \kw{ilike}.
+
+    \item \textbf{Combinaison de conditions.} Récupérez tous les utilisateurs actifs \textbf{ET} dont le \kw{username} commence par \og a \fg{} ou \og b \fg{}. Utilisez \kw{and\_} et \kw{or\_}.
+
+    \item \textbf{Exclusion.} Récupérez tous les profils dont le sexe \textbf{n'est pas} \kw{SexeType.M}. Utilisez \kw{not\_} ou l'opérateur \kw{!=}.
+
+    \item \textbf{Filtrage sur date.} Récupérez les devoirs dont la \kw{due\_date} est \textbf{déjà dépassée} par rapport à la date/heure actuelle.
+
+    \item \textbf{Plage de valeurs.} Récupérez les profils dont la date de naissance (\kw{date\_of\_birth}) est comprise entre le 1\textsuperscript{er} janvier 1995 et le 31 décembre 2000 inclus. Utilisez \kw{between}.
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Jointures et relations}
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{Q\arabic*.},start=11]
+    \item \textbf{Jointure interne (1-1).} Listez chaque utilisateur avec son email et son nom complet (prénom + nom) en effectuant une jointure entre \kw{User} et \kw{Profile}.
+
+    \item \textbf{Jointure externe (LEFT JOIN).} Listez \textbf{tous} les utilisateurs avec leur email de profil s'il existe, \kw{NULL} sinon. Utilisez \kw{outerjoin}.
+
+    \item \textbf{Relation Many-to-Many.} Pour chaque \kw{Session}, affichez son type et la liste des titres des devoirs qui lui sont associés. Naviguez via l'attribut de relation \kw{session.homeworks}.
+
+    \item \textbf{Devoirs avec correcteur.} Récupérez tous les devoirs qui ont un correcteur assigné (\kw{corrected\_by} non nul) et affichez le titre du devoir ainsi que le username du correcteur. Effectuez une jointure explicite.
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Agrégations et sous-requêtes}
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{Q\arabic*.},start=15]
+    \item \textbf{Comptage par groupe.} Comptez le nombre de profils par sexe (\kw{SexeType}) en utilisant \kw{func.count} et \kw{group\_by}.
+
+    \item \textbf{Devoir le plus récent.} Récupérez le devoir dont \kw{created\_at} est le plus récent en utilisant \kw{func.max} dans une sous-requête ou via \kw{order\_by + limit}. Proposez les deux approches.
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Opérations d'écriture}
+
+\begin{mdframed}[style=exercice]
+\begin{enumerate}[label=\textbf{Q\arabic*.},start=17]
+    \item \textbf{Insertion.} Insérez un nouvel utilisateur avec son profil en une seule transaction. Vérifiez l'insertion par une requête \kw{select} immédiate.
+
+    \item \textbf{Mise à jour.} Désactivez tous les utilisateurs dont le \kw{username} commence par \og e \fg{} en utilisant \kw{db.session.execute(db.update(...).where(...).values(...))}.
+
+    \item \textbf{Suppression.} Supprimez le profil de l'utilisateur \og eve \fg{} puis l'utilisateur lui-même. Respectez l'ordre de suppression pour éviter les erreurs de contraintes de clé étrangère.
+\end{enumerate}
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Partie III\,– Intégration Flask : routes, vues et templates}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Dans cette partie, vous allez créer de nouvelles routes dans \fichier{app.py} et les templates Jinja2 associés dans le répertoire \fichier{templates/}.
+
+\begin{mdframed}[style=attention]
+\textbf{Rappel~:} tous les templates doivent hériter de \fichier{base.html} via \kw{\{\% extends 'base.html' \%\}}.
+La navigation dans \fichier{base.html} devra être mise à jour pour inclure les nouveaux liens.
+\end{mdframed}
+
+\subsection{Liste des utilisateurs}
+
+\begin{mdframed}[style=exercice]
+\textbf{Route~: \texttt{GET /users}}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Créez la route \kw{/users} dans \fichier{app.py}.
+    \item La vue doit récupérer \textbf{uniquement les utilisateurs actifs} triés par \kw{username}, en utilisant SQLAlchemy\,2.
+    \item Créez le template \fichier{templates/users.html} qui affiche~:
+    \begin{itemize}
+        \item Un tableau HTML avec les colonnes~: \textit{ID}, \textit{Username}, \textit{Statut}, \textit{Membre depuis}.
+        \item La date \kw{created\_at} formatée avec le filtre Jinja2 \kw{strftime} ou directement via \kw{.strftime('\%d/\%m/\%Y')}.
+        \item Un badge coloré \og Actif \fg{} / \og Inactif \fg{} selon la valeur de \kw{is\_active}.
+        \item Un lien \og Voir le profil \fg{} vers la route du sous-exercice suivant.
+        \item Un message \og Aucun utilisateur trouvé \fg{} si la liste est vide (utilisez \kw{\{\% if \%\}...\{\% else \%\}}).
+    \end{itemize}
+    \item Ajoutez un lien \og Utilisateurs \fg{} dans la barre de navigation de \fichier{base.html}.
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Profil d'un utilisateur}
+
+\begin{mdframed}[style=exercice]
+\textbf{Route~: \texttt{GET /users/<int:user\_id>}}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Créez la route dynamique \kw{/users/<int:user\_id>}.
+    \item Récupérez l'utilisateur par son \kw{id}. Si l'utilisateur n'existe pas, retournez une page d'erreur 404 en utilisant \kw{abort(404)}.
+    \item Créez le template \fichier{templates/user\_detail.html} qui affiche~:
+    \begin{itemize}
+        \item Le \kw{username} et le statut de l'utilisateur.
+        \item Les informations du profil~: prénom, nom, email, téléphone, sexe, date de naissance.
+        \item Si l'utilisateur n'a pas de profil, affichez \og Profil non renseigné \fg{}.
+        \item Un bouton \og Retour à la liste \fg{} pointant vers \kw{/users}.
+    \end{itemize}
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Liste des devoirs}
+
+\begin{mdframed}[style=exercice]
+\textbf{Route~: \texttt{GET /homeworks}}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Créez la route \kw{/homeworks} qui récupère tous les devoirs triés par \kw{due\_date} croissante.
+    \item Créez le template \fichier{templates/homeworks.html} qui affiche~:
+    \begin{itemize}
+        \item Un tableau avec~: \textit{Titre}, \textit{Description}, \textit{Date limite}, \textit{Correcteur}, \textit{Statut}.
+        \item Pour la colonne \textit{Statut}~: affichez \og En retard \fg{} si la \kw{due\_date} est passée, sinon \og À venir \fg{}.
+          Comparez dans le template en passant \kw{now=datetime.now(timezone.utc)} depuis la vue.
+        \item Pour la colonne \textit{Correcteur}~: le username du correcteur ou \og Non assigné \fg{}.
+        \item Le \textbf{nombre total de devoirs} affiché au-dessus du tableau, en utilisant \kw{loop.length} ou \kw{|length} dans Jinja2.
+    \end{itemize}
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Recherche d'utilisateurs}
+
+\begin{mdframed}[style=exercice]
+\textbf{Route~: \texttt{GET /users/search}}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Créez la route \kw{/users/search}.
+    \item La vue lit le paramètre de requête \kw{q} (\kw{request.args.get('q', '')}) et effectue une recherche \kw{ilike} sur \kw{username} \textbf{et} sur \kw{Profile.nom} (jointure nécessaire).
+    \item Si \kw{q} est vide, retournez tous les utilisateurs actifs.
+    \item Créez le template \fichier{templates/search.html} avec~:
+    \begin{itemize}
+        \item Un formulaire \kw{<form method="GET" action="/users/search">} contenant un \kw{<input>} de recherche et un bouton.
+        \item La valeur saisie pré-remplie dans l'input (attribut \kw{value}).
+        \item Les résultats affichés dans un tableau identique à celui de \kw{/users}.
+        \item Le terme recherché mis en évidence dans un message~: \og X résultat(s) pour \og{}q\fg{} \fg{}.
+    \end{itemize}
+\end{enumerate}
+\end{mdframed}
+
+\subsection{Tableau de bord des sessions}
+
+\begin{mdframed}[style=exercice]
+\textbf{Route~: \texttt{GET /sessions}}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Créez la route \kw{/sessions} qui récupère toutes les sessions d'examen.
+    \item Pour chaque session, calculez dans la vue le nombre de devoirs associés.
+    \item Créez le template \fichier{templates/sessions.html} qui affiche~:
+    \begin{itemize}
+        \item Deux sections distinctes~: \og Sessions Normales \fg{} et \og Sessions de Rattrapage \fg{},
+        en utilisant \kw{\{\% if session.session\_type.value == 'NORMALE' \%\}} ou en filtrant depuis la vue.
+        \item Pour chaque session~: son \textit{id}, sa \textit{date de création} et la liste des titres des devoirs associés (balise \kw{<ul>}).
+        \item Si une section est vide, affichez \og Aucune session de ce type \fg{}.
+        \item Un résumé en bas de page~: nombre total de sessions, nombre de sessions normales, nombre de sessions de rattrapage.
+    \end{itemize}
+    \item \textbf{Question~:} pourquoi est-il préférable d'effectuer les calculs dans la vue Python plutôt que dans le template Jinja2 ? Répondez en deux phrases dans un commentaire dans \fichier{app.py}.
+\end{enumerate}
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Partie IV\,– Bonus et approfondissement}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{mdframed}[style=exercice]
+
+\textbf{Bonus 1\,– Pagination}
+
+Modifiez la route \kw{/users} pour supporter la pagination~:
+\begin{itemize}
+    \item Paramètre GET~: \kw{page} (défaut~: 1), \kw{per\_page} (défaut~: 3).
+    \item Utilisez \kw{limit} et \kw{offset} dans la requête SQLAlchemy.
+    \item Affichez des liens \og Page précédente \fg{} / \og Page suivante \fg{} dans le template.
+    \item Calculez le nombre total de pages via \kw{func.count} et \kw{math.ceil}.
+\end{itemize}
+
+\textbf{Bonus 2\,– Statistiques}
+
+Créez la route \kw{GET /stats} et le template \fichier{templates/stats.html} affichant~:
+\begin{itemize}
+    \item Nombre d'utilisateurs actifs / inactifs.
+    \item Répartition H/F des profils (nombre et pourcentage).
+    \item Devoir avec la date limite la plus proche (non dépassée).
+    \item Nombre moyen de devoirs par session (\kw{func.avg} ou calcul Python).
+    \item Utilisateur inscrit le plus récemment.
+\end{itemize}
+Toutes ces statistiques doivent être calculées par des requêtes SQLAlchemy\,2 distinctes.
+
+\textbf{Bonus 3\,– Gestion des erreurs}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item Créez un gestionnaire d'erreur 404 avec \kw{@app.errorhandler(404)} et le template \fichier{templates/404.html}.
+    \item Créez un gestionnaire d'erreur 500 (\fichier{templates/500.html}).
+    \item Documentez dans \fichier{app.py} les cas d'utilisation de \kw{abort()} dans les routes que vous avez créées.
+\end{enumerate}
+
+\end{mdframed}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Ressources}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{itemize}
+    \item Documentation SQLAlchemy\,2~: \texttt{https://docs.sqlalchemy.org/en/20/}
+    \item Documentation Flask~: \texttt{https://flask.palletsprojects.com/}
+    \item Documentation Flask-SQLAlchemy~: \texttt{https://flask-sqlalchemy.readthedocs.io/}
+    \item Documentation Jinja2~: \texttt{https://jinja.palletsprojects.com/}
+    \item \fichier{models.py}, \fichier{app.py}, \fichier{extensions/} du projet courant.
+\end{itemize}
+
+\vspace{12pt}
+\hrule
+\vspace{6pt}
+{\small\textit{Fichiers attendus en rendu~: \fichier{seed.py}, \fichier{queries.py}, \fichier{app.py} (modifié), tous les templates créés.}}
+
+\end{document}

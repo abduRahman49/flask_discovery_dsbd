@@ -1,9 +1,10 @@
 # import de la bibliotheque Flask et des fonctions utilitaires
 import json
 from flask import Flask, render_template
+from sqlalchemy import select
 from extensions.sqlalchemy import db
 from extensions.migrations import migrate
-from models import User
+from models import User, Profile
 
 # définition de l'instance de l'application
 app = Flask(__name__)
@@ -55,3 +56,16 @@ def iteration():
         {"title": "", "views": 0}
     ]
     return render_template("boucle.html", posts=posts)
+
+@app.route("/users")
+def list_users():
+    stmt = select(User).where(User.is_active).order_by(User.username)
+    users = db.session.execute(stmt).scalars().all()
+    return render_template("users.html", users=users)
+
+
+@app.route("/profil/<id>")
+def profil(id):
+    stmt = select(Profile).where(Profile.id == id)
+    profile = db.session.execute(stmt).scalar()
+    return render_template("profile.html", profil=profile)

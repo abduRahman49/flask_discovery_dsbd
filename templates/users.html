@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% if users%}
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Statut</th>
+                <th>Membre depuis</th>
+                <th>Lien profil</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td {% if user.is_active %} class="green"  {% else %} class="orange" {% endif %}>{{ user.is_active }}</td>
+                    <td>{{ user.created_at.strftime("%d/%m/%Y") }}</td>
+                    <td><a href="{{ url_for('profil', id=user.profile.id) }}">Lien vers profile</a></td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+    {% else %}
+        <p>Aucun utilisateur trouvé</p>
+    {% endif %}
+
+{% endblock %}

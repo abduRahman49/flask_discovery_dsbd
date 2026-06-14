@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Profil</h3>
+
+    <div>
+        <p>Email: {{ profil.email }}</p>
+        <p>Prenom: {{ profil.prenom }}</p>
+        <p>Prenom: {{ profil.nom }}</p>
+        <p>Date of birth: {{ profil.date_of_birth }}</p>
+        <p>Telephone: {{ profil.telephone }}</p>
+        <p>Sexe: {{ profil.sexe }}</p>
+    </div>
+{% endblock %}

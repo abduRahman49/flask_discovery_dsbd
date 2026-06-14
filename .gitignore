@@ -24,3 +24,7 @@ build/
 *.egg
 *.tar.gz
 *.zip
+TP_SQLAlchemy_Flask.aux
+TP_SQLAlchemy_Flask.log
+TP_SQLAlchemy_Flask.pdf
+TP_SQLAlchemy_Flask.tex

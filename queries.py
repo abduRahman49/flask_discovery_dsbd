@@ -79,6 +79,3 @@ with app.app_context():
     result12 = db.session.execute(external_join_user_profile_stmt).scalars().all()
     print("external join: ", result12)
 
-
-
-

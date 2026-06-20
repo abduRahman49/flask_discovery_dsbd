@@ -1,10 +1,13 @@
 # import de la bibliotheque Flask et des fonctions utilitaires
 import json
-from flask import Flask, render_template
-from sqlalchemy import select
 from extensions.sqlalchemy import db
 from extensions.migrations import migrate
-from models import User, Profile
+from extensions.authentification import login_manager
+from flask import Flask
+from auth.routes import bp as auth_bp
+from common.routes import bp as common_bp
+from users.routes import bp as users_bp
+
 
 # définition de l'instance de l'application
 app = Flask(__name__)
@@ -15,57 +18,22 @@ app.config.from_file("config.json", load=json.load)
 db.init_app(app)
 # initialisation de l'extension Flask-Migrate
 migrate.init_app(app, db)
+# initialisation de l'extension Flask-Login
+login_manager.init_app(app)
+# Configuration de la route par défaut pour la page de connexion
+login_manager.login_view = "auth.login"
+login_manager.login_message = "Veuillez vous connecter ."
+
+# Connecter les blueprints des différents modules à l'instance de l'app
+app.register_blueprint(auth_bp)
+app.register_blueprint(common_bp)
+app.register_blueprint(users_bp)
+
+### Module principal ###
 
 # liaison entre une route (url) de l' application et un controleur (fonction)
 # lien entre url et fonction
-@app.route("/")
-@app.route("/index")
-@app.route("/home")
-def hello_world():
-    # réponse HTTP à l'utilisateur
-    return render_template("index.html")
-
-@app.route("/about/<name>")
-def about(name):
-    # réponse HTTP à l'utilisateur
-    return render_template("about.html", name=name)
-
-@app.route("/contact")
-def contact():
-    # réponse HTTP à l'utilisateur
-    nom ="Abdou"
-    etudiant = {"nom": "Fall", "prenom": "Samba", "age": 21}
-    liste_cours = ["Python", "Flask", "UML"]
-    return render_template("contact.html", name=nom, student=etudiant, cours=liste_cours)
-
-@app.route("/filtrage")
-def filtrage():
-    posts = [
-        {"title": "Flask Intro", "views": 1243.567},
-        {"title": "Jinja Deep Dive", "views": 987.3},
-        {"title": "", "views": 0}
-    ]
-    titres = [post["title"] for post in posts]
-    return render_template("filtre.html", publications=posts, titres=titres)
-
-@app.route("/iteration")
-def iteration():
-    posts = [
-        {"title": "Flask Intro", "views": 1243.567},
-        {"title": "Jinja Deep Dive", "views": 987.3},
-        {"title": "", "views": 0}
-    ]
-    return render_template("boucle.html", posts=posts)
-
-@app.route("/users")
-def list_users():
-    stmt = select(User).where(User.is_active).order_by(User.username)
-    users = db.session.execute(stmt).scalars().all()
-    return render_template("users.html", users=users)
 
 
-@app.route("/profil/<id>")
-def profil(id):
-    stmt = select(Profile).where(Profile.id == id)
-    profile = db.session.execute(stmt).scalar()
-    return render_template("profile.html", profil=profile)
+### Module de gestion des utilisateurs ###
+

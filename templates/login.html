@@ -8,6 +8,8 @@
         <label for="password">Password</label>
         <input id="password" name="password" type="password" required>
         <button>Connexion</button>
+
+        <a href="{{ url_for('auth.register') }}">Créer un compte</a>
     </form>
 
 {% endblock %}

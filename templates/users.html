@@ -18,7 +18,7 @@
                     <td>{{ user.username }}</td>
                     <td {% if user.is_active %} class="green"  {% else %} class="orange" {% endif %}>{{ user.is_active }}</td>
                     <td>{{ user.created_at.strftime("%d/%m/%Y") }}</td>
-                    <td><a href="{{ url_for('profil', id=user.profile.id) }}">Lien vers profile</a></td>
+                    <td><a href="{{ url_for('users.profil', id=user.profile.id) }}">Lien vers profile</a></td>
                 </tr>
             {% endfor %}
 

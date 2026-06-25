@@ -13,6 +13,7 @@
         <a href="{{ url_for('common.contact') }}">Contact</a>
         <a href="{{ url_for('common.about', name='Flask') }}">About</a>
         <a href="{{ url_for('users.list_users') }}">Utilisateurs</a>
+        {% if current_user.is_authenticated %} <a href="{{ url_for('auth.log_out') }}">Déconnexion</a> {% endif %}
     </nav>
 
     {# Contenu spécifique pour chaque template #}

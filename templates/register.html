@@ -5,7 +5,7 @@
     <form method="post" action="{{ url_for('auth.register') }}">
 
         <label>Email</label>
-        <input type="text" name="email" required />
+        <input type="email" pattern=".+@isi\.com" name="email" required />
         <label>Prenom</label>
         <input type="text" name="prenom" required/>
         <label>Nom</label>
@@ -26,6 +26,8 @@
         <input type="password" name="password" required/>
 
         <button>Créer utilisateur</button>
+
+        <a href="{{ url_for('auth.login') }}">Se connecter</a>
     </form>
 
 {% endblock %}

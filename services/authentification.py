@@ -14,7 +14,7 @@ class AuthentificationService:
     def register_user():
         # code permettant de créar un utilisateur
         ...
-    
+
     @classmethod
     def connect_user(username, password):
         # code permettant de connecter un utilisateur
@@ -27,7 +27,7 @@ class AuthentificationService:
             raise IncorrectPasswordExcpetion("Mot de passe incorrecte")
 
         login_user(user_in_database)
-    
+
     @classmethod
     def deconnect_user():
         # code permettant de déconnecter un utilisateur
